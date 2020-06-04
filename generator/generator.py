@@ -9,29 +9,23 @@ class Generator():
     def __init__(self, data):
         self.data = data
 
-
     def generate(self, key):
         # Generates a result from the gen data dictionary at key
         if self.is_dataentry(key):
-            string = self.select(self.data[key])
-            if string:
-                return self.expand_tokens(string)
+            text = self.select(self.data[key])
+            return self.replace_keys(text)
         elif self.is_dieroll(key):
             return self.dieroll(key)
         else:
-            return ''
+            return key
     
-    def expand_tokens(self, phrase):
-        # Replaces {token} in phrase
-        tokens = findall(r"{([\w\s]+)}", phrase)
-        for token in tokens:
-            replacement = self.generate(token)
-            if replacement:
-                phrase = phrase.replace('{'+token+'}',replacement)
-            else:
-                phrase = phrase.replace('{'+token+'}',token)
-        return phrase
-    
+    def replace_keys(self, text):
+        # Replaces {key} in phrase
+        keys = findall(r"{([\w\s]+)}", text)
+        for key in keys:
+            text = text.replace('{'+key+'}',self.generate(key))
+        return text
+
 
     # DIE FUNCTIONS
 
