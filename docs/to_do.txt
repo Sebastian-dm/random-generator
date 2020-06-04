@@ -2,4 +2,3 @@
 - Ability to couple rolls to make one roll dependent on the result of another
 - Support for multiple rolls
 - Support for parameters set as arguments
-- math support (at least multiplication of results)
