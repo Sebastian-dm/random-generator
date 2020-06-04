@@ -1,6 +1,6 @@
 {
 "test": [
-    "Give the {object} to the {creature} {4d100*1d6} miles to the {direction}."],
+    "Give the {object} to the {creature} {4d100*(1d6+1)} miles to the {direction}."],
 "geas": [
     "Guard the {creature} for {1d6} day(s).",
     "Destroy the {creature}.",
@@ -91,7 +91,7 @@
     "31-40": "{2d100} miles",
     "41-50": "{3d100} miles",
     "51-59": "{4d100} miles",
-    "60-100": "{4d100}*{1d6} miles"},
+    "60-100": "{4d100*1d6} miles"},
 "direction": [
     "north",
     "north east",

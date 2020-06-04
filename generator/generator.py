@@ -1,6 +1,6 @@
 
 from re import findall
-from parser import expr
+from parser import expr, compilest
 from random import choice, random
 
 from die import Die
@@ -34,7 +34,7 @@ class Generator():
     
     def replace_keys(self, text):
         # Replaces {key} in text
-        keys = findall(r"{([\w\s]+)}", text)
+        keys = findall(r"{([\w\s()+\-*\/]+)}", text)
         for key in keys:
             text = text.replace('{'+key+'}',self.generate(key))
         return text
@@ -60,20 +60,26 @@ class Generator():
     # DIE FUNCTIONS
 
     def is_dieroll(self, key):
-        # Checks if key is a string with exactly 2 numbers separated by a "d"
+        # Checks if key is a string with die notation
         matches = findall(r"(\d+)(d)(\d+)",key)
-        if len(matches) == 1:
-            if len(matches[0]) == 3 and len("".join(matches[0])) == len(key):
-                n_of, separator, sides = matches[0]
-                if n_of.isdigit() and separator == "d" and sides.isdigit():
+        # At least one match and only die notation
+        if len(matches) > 0 and all([c in "d0123456789()+-*/" for c in key]):
+            # Each match is exactly 3 groups
+            if all([len(m) == 3 for m in matches]):
+                # Each match matches properties for a die (sides amount etc.)
+                if all([m[0].isdigit() and m[1]=="d" and m[2].isdigit()] for m in matches):
                     return True
         return False
 
     def dieroll(self, key):
         # Gives the result of the roll for a given dice string (such as "5d6")
         matches = findall(r"(\d+)(d)(\d+)",key)
-        n_of, _, sides = matches[0]
-        return str(Die(sides).roll(n_of))
+        for match in matches:
+            n_of, _, sides = list(match)
+            roll_result = str(Die(sides).roll(n_of))
+            key = key.replace("".join(match), roll_result)
+        result = self.math_parse(key)
+        return result
     
     def math_parse(self, expression):
         return str(eval(expr(expression).compile()))
