@@ -17,4 +17,4 @@ if __name__ == "__main__":
     generator = Generator(data)
 
     # Print a result
-    print(generator.generate("geas_test"))
+    print(generator.generate("geas"))
